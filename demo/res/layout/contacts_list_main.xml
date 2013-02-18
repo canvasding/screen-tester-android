@@ -1,0 +1,30 @@
+<!--
+  ~ Screenshot based testing framework for Android platform
+  ~ Copyright 2013 by Tomsksoft, http://tomsksoft.com. All rights reserved.
+  ~
+  ~ This software is licensed under
+  ~ a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
+  ~ http://creativecommons.org/licenses/by-nc-sa/3.0/
+  ~
+  ~ contacts_list_main.xml
+  ~
+  ~ Created by lia on 18.02.13 15:35
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <ListView
+        android:id="@+id/ContactsListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+    </ListView>
+
+</RelativeLayout>

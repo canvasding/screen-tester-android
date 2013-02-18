@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Screenshot based testing framework for Android platform
+  ~ Copyright 2013 by Tomsksoft, http://tomsksoft.com. All rights reserved.
+  ~
+  ~ This software is licensed under
+  ~ a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
+  ~ http://creativecommons.org/licenses/by-nc-sa/3.0/
+  ~
+  ~ strings.xml
+  ~
+  ~ Created by lia on 18.02.13 15:35
+  -->
+
+<resources>
+
+    <string name="app_name">demoapp</string>
+
+</resources>

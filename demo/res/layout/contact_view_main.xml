@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Screenshot based testing framework for Android platform
+  ~ Copyright 2013 by Tomsksoft, http://tomsksoft.com. All rights reserved.
+  ~
+  ~ This software is licensed under
+  ~ a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
+  ~ http://creativecommons.org/licenses/by-nc-sa/3.0/
+  ~
+  ~ contact_view_main.xml
+  ~
+  ~ Created by lia on 18.02.13 15:35
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/contact_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/contact_name"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="19dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/contact_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/contact_phone"
+        android:layout_marginLeft="52dp"
+        android:layout_marginTop="14dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/contact_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/contact_name"
+        android:layout_below="@+id/contact_name"
+        android:layout_marginTop="20dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

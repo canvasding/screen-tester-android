@@ -56,12 +56,12 @@ public class ScreenshotTaker {
 	/**
 	 * Creates an instance of ScreenshotTaker with path to save and some format params
 	 * @param path folder, in which screens from this Taker will be put. Appends to the ScreenshotTaker.DEFAULT_SCREENSHOTS_PATH
-	 * @param dimension current screen dimenshion, is a path of path to the screenshots. If null, assignes to "unspecified"
+	 * @param dimension current screen dimension, is a path of path to the screenshots. If null, assigned to "unspecified"
 	 * @param format declares how result file name looks like
 	 */
 	public ScreenshotTaker(String path, String dimension, SavePathFormat format)
 	{
-        this.savePath = DEFAULT_SCREENSHOTS_PATH + path;
+        this.savePath = path;
 
 		if ( dimension == null ) {
 			screenDimension = "unspecified";
@@ -162,7 +162,8 @@ public class ScreenshotTaker {
 
 	private void saveScreenshot(String className,String screensotName)
 	{
-		File resultFile = new File(getFormedScreenshotName(className, screensotName, screenshotAlbum.size()) + FILE_EXT);
+		String resultFileName = getFormedScreenshotName(className, screensotName, screenshotAlbum.size()) + FILE_EXT;
+		File resultFile = new File(DEFAULT_SCREENSHOTS_PATH+resultFileName);
 		resultFile.getParentFile().mkdirs();
 		try {
 			FileOutputStream pictureOutStream = new FileOutputStream(resultFile);
@@ -171,7 +172,7 @@ public class ScreenshotTaker {
 			pictureOutStream.close();
 
 			FileWriter fileListWriter = new FileWriter(fileList, true);
-			fileListWriter.write(resultFile.getParentFile().getName()+'/'+resultFile.getName()+'\n');
+			fileListWriter.write(resultFileName+'\n');
 			fileListWriter.close();
 		} catch (FileNotFoundException e) {
             e.printStackTrace();

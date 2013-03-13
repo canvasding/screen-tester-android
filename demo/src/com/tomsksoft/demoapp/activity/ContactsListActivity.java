@@ -37,7 +37,7 @@ public class ContactsListActivity extends Activity implements
 	
 	public static final String CONTACT = "id";
 	public static final String NAME = "name";
-	public static final String PHONE = "phone";
+	public static final String PHONE = "lastName";
 	public static final String EMAIL = "email";
 	
 	private SimpleCursorAdapter adapter;
@@ -69,9 +69,10 @@ public class ContactsListActivity extends Activity implements
 		if (cursor.getCount() == 0){
 			for (MyContact contact : contacts) {
 				ContentValues cv = new ContentValues();
-				cv.put(DbStruct.ContactColumns.CONTACT_DISPLAY_NAME, contact.name);
-				cv.put(DbStruct.ContactColumns.CONTACT_FIRST_NAME, contact.email);
-				cv.put(DbStruct.ContactColumns.CONTACT_LAST_NAME, contact.phone);
+				cv.put(DbStruct.ContactColumns.CONTACT_FIRST_NAME, contact.name);
+				cv.put(DbStruct.ContactColumns.CONTACT_EMAIL, contact.email);
+				cv.put(DbStruct.ContactColumns.CONTACT_LAST_NAME, contact.lastName);
+				cv.put(DbStruct.ContactColumns.CONTACT_FAVORITE, 0);
 				getContentResolver().insert(
 						ContactsContentProvider.CONTACT_CONTENT_URI, cv);
 			}
@@ -79,8 +80,8 @@ public class ContactsListActivity extends Activity implements
 		
 //		cursor.requery();
 		
-		String[] from = { DbStruct.ContactColumns.CONTACT_DISPLAY_NAME,
-				DbStruct.ContactColumns.CONTACT_FIRST_NAME };
+		String[] from = { DbStruct.ContactColumns.CONTACT_LAST_NAME,
+				DbStruct.ContactColumns.CONTACT_EMAIL };
 		int[] to = { android.R.id.text1, android.R.id.text2 };
 		
 		adapter = new SimpleCursorAdapter(this,

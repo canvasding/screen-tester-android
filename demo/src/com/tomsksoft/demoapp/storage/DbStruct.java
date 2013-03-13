@@ -21,7 +21,6 @@ public interface DbStruct
     public interface Tables
     {
         public String CONTACTS = "contacts";
-        public String CONTACT_ITEMS = "contact_items";
     }
 
     public interface ContactColumns
@@ -29,7 +28,7 @@ public interface DbStruct
         public String CONTACT_ID = "_id";
         public String CONTACT_FIRST_NAME = "first_name";
         public String CONTACT_LAST_NAME = "last_name";
-        public String CONTACT_DISPLAY_NAME = "display_name";
-
+	    public String CONTACT_EMAIL = "email";
+	    public String CONTACT_FAVORITE = "favorite";
     }
 }

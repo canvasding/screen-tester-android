@@ -16,21 +16,25 @@
     <table name="contacts">
         <column>first_name</column>
         <column>last_name</column>
-        <column>display_name</column>
+        <column>email</column>
+		<column>favorite</column>
         <row>
-            <value>First</value>
-            <value>Firsterst</value>
-            <value>NubmerOne</value>
+            <value>Ilya</value>
+            <value>Ivanov</value>
+            <value>Ilya.Ivanov@post.com</value>
+			<value>0</value>
         </row>
         <row>
-            <value>Second</value>
-            <value>Secondest</value>
-            <value>NubmerTwo</value>
+            <value>Peter</value>
+            <value>Severtcev</value>
+            <value>Nord@post.com</value>
+			<value>1</value>
         </row>
         <row>
-            <value>Third</value>
-            <value>Thirdest</value>
-            <value>NubmerThree</value>
+            <value>Eugene</value>
+            <value>Malikov</value>
+            <value>SmallEugene@post.com</value>
+			<value>0</value>
         </row>
     </table>
 </dataset>

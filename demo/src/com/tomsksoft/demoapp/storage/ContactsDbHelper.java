@@ -33,7 +33,8 @@ public class ContactsDbHelper extends SQLiteOpenHelper
 				+ DbStruct.ContactColumns.CONTACT_ID + " INTEGER PRIMARY KEY,"
 				+ DbStruct.ContactColumns.CONTACT_FIRST_NAME + " TEXT,"
 				+ DbStruct.ContactColumns.CONTACT_LAST_NAME + " TEXT,"
-				+ DbStruct.ContactColumns.CONTACT_DISPLAY_NAME + " TEXT" + ");");
+				+ DbStruct.ContactColumns.CONTACT_EMAIL + " TEXT,"
+				+ DbStruct.ContactColumns.CONTACT_FAVORITE + " INTEGER" + ");");
 	}
 	
 	@Override

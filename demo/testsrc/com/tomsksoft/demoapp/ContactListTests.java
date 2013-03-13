@@ -40,7 +40,7 @@ public class ContactListTests extends
         InputStream file = getInstrumentation().getContext().getAssets().open(datasetName);
         new DatabaseHelper(dbHelper.getWritableDatabase()).fillDatabase(file);
 
-	    taker = new ScreenshotTaker(getInstrumentation().getTargetContext().getPackageName(),"800x480",ScreenshotTaker.SavePathFormat.SUFFIX);
+	    taker = new ScreenshotTaker(ScreenshotTaker.SavePathFormat.SUFFIX);
         activity = getActivity();
     }
 

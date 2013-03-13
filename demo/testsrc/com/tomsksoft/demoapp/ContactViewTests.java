@@ -45,7 +45,7 @@ public class ContactViewTests extends
         InputStream file = getInstrumentation().getContext().getAssets().open(datasetName);
 	    new DatabaseHelper(dbHelper.getWritableDatabase()).fillDatabase(file);
 
-	    taker = new ScreenshotTaker(getInstrumentation().getTargetContext().getPackageName(),"800x480",ScreenshotTaker.SavePathFormat.SUFFIX);
+	    taker = new ScreenshotTaker(ScreenshotTaker.SavePathFormat.SUFFIX);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ContactViewTests extends
                     getInstrumentation().getTargetContext().getPackageName(),
                     ContactViewActivity.class, contactViewIntent);
 
-	        taker.doScreenShot(activity,null,new int[] {com.tomsksoft.demoapp.R.id.contact_name},"contantData");
+	        taker.doScreenShot(activity,null,new int[] {R.id.contact_progressbar},"contactData");
 
             activity.finish();
             cursor.moveToNext();

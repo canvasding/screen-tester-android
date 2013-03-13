@@ -15,6 +15,8 @@ package com.tomsksoft.screentester;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.View;
 import junit.framework.Assert;
 
@@ -31,53 +33,47 @@ public class ScreenshotTaker {
 	 * Root path element for saving screens
 	 */
 	public static final String DEFAULT_SCREENSHOTS_PATH = "/mnt/sdcard/screentester/";
+	private static final String SCREENSHOT_LIST_FILENAME = "screenshot.list";
 
 	private final String FILE_EXT = ".png";
 	private final List<Bitmap> screenshotAlbum = new ArrayList<Bitmap>();
     private final File fileList;
+	private final SavePathFormat saveFormat;
+	private final boolean autoSave;
 
-	public final String savePath;
-	public final String screenDimension;
-	public final SavePathFormat saveFormat;
-
+	private String savePath;
+	private Point resolution;
 
 	/**
 	 * Create an instance without saving screenshots to the storage.
-	 * You can take screenshots after finish calling getScreenshotAlbum()
+	 * You can retrieve screenshots after finish calling getScreenshotAlbum()
 	 */
 	public ScreenshotTaker()
 	{
 		savePath = null;
-		screenDimension = null;
+		resolution = null;
 		saveFormat = null;
         fileList = null;
+		autoSave = false;
     }
 
 	/**
-	 * Creates an instance of ScreenshotTaker with path to save and some format params
-	 * @param path folder, in which screens from this Taker will be put. Appends to the ScreenshotTaker.DEFAULT_SCREENSHOTS_PATH
-	 * @param dimension current screen dimension, is a path of path to the screenshots. If null, assigned to "unspecified"
+	 * Creates an instance of ScreenshotTaker with format params.
+	 * This instance will save screenshots to SDCard in "/mnt/sdcard/screentester/"
 	 * @param format declares how result file name looks like
 	 */
-	public ScreenshotTaker(String path, String dimension, SavePathFormat format)
+	public ScreenshotTaker(SavePathFormat format)
 	{
-        this.savePath = path;
+        saveFormat = format;
+		autoSave = true;
 
-		if ( dimension == null ) {
-			screenDimension = "unspecified";
-		}
-		else {
-			screenDimension = dimension;
-		}
-		saveFormat = format;
-
-        fileList = new File(DEFAULT_SCREENSHOTS_PATH,"screenshot.list");
+        fileList = new File(DEFAULT_SCREENSHOTS_PATH, SCREENSHOT_LIST_FILENAME);
 		File parent = fileList.getParentFile();
 		if ( parent.exists() ) {
 //			cleanupOutput(parent);
 		}
 		else if ( !parent.mkdirs() ) {
-			Assert.fail("Cannot create " + savePath + " folder");
+			Assert.fail("Cannot create " + DEFAULT_SCREENSHOTS_PATH + " folder");
 		}
     }
 
@@ -91,6 +87,16 @@ public class ScreenshotTaker {
 	public void doScreenShot(final Activity activity, Integer screeningViewId, int[] excludedViewIds,
 	                         String screenshotName)
 	{
+
+        if (activity == null) Assert.fail("Activity is null. Maybe not started or already finished");
+        // BUG: next line will not screenshot activity if there is dialog
+		// Should be be another mechanism to check whether activity was drawed
+//        if (!activity.hasWindowFocus()) Assert.fail("Activity is not displayed or doesn't have focus (May be taken be pop-up or dialog)");
+
+		Display disp = activity.getWindowManager().getDefaultDisplay();
+		resolution = new Point(disp.getWidth(),disp.getHeight());
+		this.savePath = activity.getPackageName();
+
 		if ( screeningViewId == null ) {
 			screeningViewId = android.R.id.content;
 		}
@@ -152,9 +158,9 @@ public class ScreenshotTaker {
 	{
 		switch ( saveFormat ) {
 			case PREFIX:
-				return String.format("%s/%s/%s_%s%d", savePath,screenDimension,className,screensotName,number);
+				return String.format("%s/%dx%d/%s_%s%d", savePath, resolution.x, resolution.y,className,screensotName,number);
 			case SUFFIX:
-				return String.format("%s/%s_%s%d_%s", savePath,className,screensotName,number,screenDimension);
+				return String.format("%s/%s_%s%d_%dx%d", savePath, className, screensotName, number, resolution.x,resolution.y);
 			default:
 				return null;
 		}
@@ -163,25 +169,36 @@ public class ScreenshotTaker {
 	private void saveScreenshot(String className,String screensotName)
 	{
 		String resultFileName = getFormedScreenshotName(className, screensotName, screenshotAlbum.size()) + FILE_EXT;
-		File resultFile = new File(DEFAULT_SCREENSHOTS_PATH+resultFileName);
+		File resultFile = new File(DEFAULT_SCREENSHOTS_PATH + resultFileName);
 		resultFile.getParentFile().mkdirs();
 		try {
-			FileOutputStream pictureOutStream = new FileOutputStream(resultFile);
+			FileWriter fileListWriter = new FileWriter(fileList, true);
+			fileListWriter.write(resultFileName + '\n');
+			fileListWriter.close();
+
 			Bitmap lastScreenshot = screenshotAlbum.get(screenshotAlbum.size() - 1);
+			if ( lastScreenshot == null ) {
+				resultFile.delete();
+				Assert.fail("Screenshot was not created");
+			}
+
+			FileOutputStream pictureOutStream = new FileOutputStream(resultFile);
 			lastScreenshot.compress(Bitmap.CompressFormat.PNG, 100, pictureOutStream);
 			pictureOutStream.close();
 
-			FileWriter fileListWriter = new FileWriter(fileList, true);
-			fileListWriter.write(resultFileName+'\n');
-			fileListWriter.close();
-		} catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Assert.fail("Cannot create file");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Assert.fail("Error closing file");
-        }
-    }
+			// need to avoid OutOfMemoryException
+			lastScreenshot.recycle();
+
+		}
+		catch ( FileNotFoundException e ) {
+			e.printStackTrace();
+			Assert.fail("Cannot create file");
+		}
+		catch ( IOException e ) {
+			e.printStackTrace();
+			Assert.fail("Error closing file");
+		}
+	}
 
     /**
      * Recursive deletion of directory or file

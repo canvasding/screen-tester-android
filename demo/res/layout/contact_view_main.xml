@@ -13,38 +13,107 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+				android:layout_width="match_parent"
+    			android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/contact_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/contact_name"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="19dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+			android:id="@+id/contact_first_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignLeft="@+id/contact_last_name"
+			android:layout_alignParentTop="true"
+			android:layout_marginTop="10dp"
+			android:text="Large Text"
+			android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	<View
+			android:background="?android:colorForeground"
+			android:layout_below="@id/contact_first_name"
+			android:layout_marginTop="10dp"
+			android:layout_height="2dp"
+			android:layout_width="fill_parent"
+	/>
 
     <TextView
-        android:id="@+id/contact_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/contact_phone"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="14dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+			android:id="@+id/contact_last_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_below="@+id/contact_first_name"
+			android:layout_marginLeft="30dp"
+			android:layout_marginTop="20dp"
+			android:text="Large Text"
+			android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	<View
+			android:background="?android:colorForeground"
+			android:layout_below="@id/contact_last_name"
+			android:layout_marginTop="10dp"
+			android:layout_height="2dp"
+			android:layout_width="fill_parent"
+			/>
 
     <TextView
-        android:id="@+id/contact_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/contact_name"
-        android:layout_below="@+id/contact_name"
-        android:layout_marginTop="20dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+			android:id="@+id/contact_email"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignLeft="@+id/contact_last_name"
+			android:layout_below="@+id/contact_last_name"
+			android:layout_marginTop="20dp"
+			android:text="Large Text"
+			android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+	<View
+			android:background="?android:colorForeground"
+			android:layout_below="@id/contact_email"
+			android:layout_marginTop="10dp"
+			android:layout_height="2dp"
+			android:layout_width="fill_parent"
+			/>
+
+	<TextView
+			android:id="@+id/contact_favorite_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignLeft="@+id/contact_email"
+			android:layout_below="@+id/contact_email"
+			android:layout_marginTop="20dp"
+			android:text="Favorite"
+			android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	<CheckBox
+			android:id="@+id/contact_favorite_checkbox"
+			android:layout_toRightOf="@id/contact_favorite_label"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_marginLeft="20dp"
+			android:layout_alignBaseline="@id/contact_favorite_label"
+			/>
+
+	<View
+			android:background="?android:colorForeground"
+			android:layout_below="@id/contact_favorite_label"
+			android:layout_marginTop="10dp"
+			android:layout_height="2dp"
+			android:layout_width="fill_parent"
+			/>
+
+	<ProgressBar
+			android:id="@+id/contact_progressbar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignLeft="@+id/contact_favorite_label"
+			android:layout_below="@+id/contact_favorite_label"
+			android:layout_marginTop="20dp"
+			android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	<View
+			android:background="?android:colorForeground"
+			android:layout_below="@id/contact_progressbar"
+			android:layout_marginTop="10dp"
+			android:layout_height="2dp"
+			android:layout_width="fill_parent"
+			/>
 
 </RelativeLayout>

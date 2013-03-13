@@ -16,6 +16,7 @@ package com.tomsksoft.demoapp.activity;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.tomsksoft.demoapp.R;
@@ -40,21 +41,25 @@ public class ContactViewActivity extends Activity
 				new String[] { id }, null);
 		if (cursor.moveToFirst()) {
 			
-			String displayName = cursor
+			String email = cursor
 					.getString(cursor
-							.getColumnIndex(DbStruct.ContactColumns.CONTACT_DISPLAY_NAME));
+							.getColumnIndex(DbStruct.ContactColumns.CONTACT_EMAIL));
 			String firstName = cursor
 					.getString(cursor
 							.getColumnIndex(DbStruct.ContactColumns.CONTACT_FIRST_NAME));
 			String lastName = cursor.getString(cursor
 					.getColumnIndex(DbStruct.ContactColumns.CONTACT_LAST_NAME));
+			boolean favor = cursor.getInt(cursor.getColumnIndex(DbStruct.ContactColumns.CONTACT_FAVORITE)) != 0;
 			
-			TextView tv = (TextView)findViewById(R.id.contact_name);
-			tv.setText(displayName);
-			tv = (TextView)findViewById(R.id.contact_email);
+			TextView tv = (TextView)findViewById(R.id.contact_email);
+			tv.setText(email);
+			tv = (TextView)findViewById(R.id.contact_first_name);
 			tv.setText(firstName);
-			tv = (TextView)findViewById(R.id.contact_phone);
+			tv = (TextView)findViewById(R.id.contact_last_name);
 			tv.setText(lastName);
+			CheckBox cb = (CheckBox)findViewById(R.id.contact_favorite_checkbox);
+			cb.setChecked(favor);
+
 		}
 	}
 	

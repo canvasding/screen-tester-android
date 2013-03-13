@@ -21,13 +21,13 @@ public class MyContact implements Serializable
 	private static final long	serialVersionUID	= 4377832219041566024L;
 	
 	public String				name;
-	public String				phone;
+	public String lastName;
 	public String				email;
 	
-	public MyContact(final String name, final String phone, final String email)
+	public MyContact(final String name, final String lastName, final String email)
 	{
 		this.name = name;
-		this.phone = phone;
+		this.lastName = lastName;
 		this.email = email;
 	}
 }

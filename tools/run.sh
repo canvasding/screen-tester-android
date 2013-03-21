@@ -13,12 +13,20 @@
 set -e
 
 if [ "$#" != "3" ]; then 
-	echo "Usage: run <attested_screenshots_dir> <device_screenshot_dir> <result_dir>"; 
+	echo "Usage: run.sh <attested_screenshots_dir> <device_screenshot_dir> <result_dir>"; 
 	echo "<attested_screenshots_dir> - folder, where attested screenshots are" 
 	echo "<device_screenshot_dir> - folder on device or emulator, where new screenshots were created"
 	echo "<result_dir> - output folder, where new and diffed screenshots and junit-report will be placed"
 	exit 1; 
 fi;
+
+## checking prerequisites
+echo ""
+echo "Checking prerequisites..."
+if [ "$ANDROID_SDK" == "" ]; then echo "You don't have $ANDROID_SDK eviromental variable set. Exiting..."; return 1; fi
+if [ "`realpath /bin`" != "/bin" ]; then echo "You don't have 'realpath' installed. Exiting..."; return 1; fi
+if [[ `compare` && $? != 0 ]]; then echo "You don't have ImageMagick installed. Exiting..."; return 1; fi
+if [[ `/usr/bin/python -c'print "work"'` != work ]]; then echo "You don't have python installed. Exiting..."; return 1; fi
 
 ## setup initial paths
 echo ""
@@ -50,7 +58,7 @@ mkdir -p $current_screenshots_dir/
 mkdir -p $diffed_screenshots_dir/
 
 ## getting screenshots from device
-$script_dir/pull_data.sh $remote_device_dir $current_screenshots_dir
+bash $script_dir/pull_data.sh $remote_device_dir $current_screenshots_dir
 
 files=$current_screenshot_list
 ## checking if there are any attested screenshots
@@ -84,7 +92,9 @@ do
 		else ## if all right
 			echo -e "$var" >> $raw_junit
 			mkdir -p `dirname $diffed_screenshots_dir/$var`
-			/bin/time --format="%e" $script_dir/compare.sh $attested_screenshots_dir/${var} $current_screenshots_dir/${var} $diffed_screenshots_dir/${var} ${raw_junit} 2>> $raw_junit
+			# /bin/time --format="%e" 
+			bash $script_dir/compare.sh $attested_screenshots_dir/${var} $current_screenshots_dir/${var} $diffed_screenshots_dir/${var} ${raw_junit} 
+			# 2>> $raw_junit
 		fi
 	fi
 	echo -n ";" >> $raw_junit

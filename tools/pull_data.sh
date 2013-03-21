@@ -13,7 +13,7 @@
 set -e
 
 if [ "$#" != "2" ]; then 
-	echo "Usage: pull_data <device_file_dir> <local_file_dir>"; 
+	echo "Usage: pull_data.sh <device_file_dir> <local_file_dir>"; 
 	echo "<device_file_dir> - folder on device which is need to be pulled"
 	echo "<local_file_dir> - folder to which data will be pulled"
 	exit 1; 
@@ -28,7 +28,7 @@ fi
 	
 echo ""
 echo "Getting screenshots from device..."
-$ANDROID_HOME/platform-tools/adb pull ${1} ${local_path}
+$ANDROID_SDK/platform-tools/adb pull ${1} ${local_path}
 if [ ! -d ${local_path} ] 
 then 
 	echo Screenshots doesnt copy! Check path to the screenshots on the device.

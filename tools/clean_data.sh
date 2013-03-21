@@ -13,12 +13,12 @@
 set -e
 
 if [ "$#" != "1" ]; then 
-	echo "Usage: clean_data <device_file_dir> "; 
+	echo "Usage: clean_data.sh <device_file_dir> "; 
 	echo "<device_file_dir> - folder on device to delete"
 	exit 1; 
 fi;
 
 echo ""
 echo "Cleaning up device last screenshots"
-$ANDROID_HOME/platform-tools/adb shell rm -r ${1}
+$ANDROID_SDK/platform-tools/adb shell rm -r ${1}
 exit 0

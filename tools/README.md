@@ -19,6 +19,7 @@ Prerequisites
 
 To make this scripts work:
 
-* You'll need to install Android SDK (and create enviroment variable $ANDROID_HOME).
+* You'll need to install Android SDK (and create enviroment variable $ANDROID_SDK).
 * For Windows users, install cygwin and ImageMagic, 'awk', maybe 'realpath' and 'dirname' cygwin packages.
 * For others only ImageMagic and 'awk', 'realpath', 'dirname', if they dont installed yet. 
+* Also python2.7 need to be installed and can be executed by '/usr/bin/python'

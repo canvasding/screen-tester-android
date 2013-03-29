@@ -11,9 +11,6 @@
 
 #!/bin/bash
 CURR_TIME=0
-function get_time(){
-	CURR_TIME=`/usr/bin/python -c'import time; print repr(time.time()*1000)' | awk -F. '{print $1}'`
-}
 set -e
 if [[ ($# < 3) || ($# > 4) ]]; then
 	echo "Usage: compare.sh <image_one> <image_two> <diff_image> [out_file]"; 
@@ -24,6 +21,11 @@ if [[ ($# < 3) || ($# > 4) ]]; then
 	exit 1; 
 fi;
 if [ "$#" == "3" ]; then res=/dev/null; else res=$4; fi;
+
+function get_time(){
+	CURR_TIME=`/usr/bin/python -c'import time; print repr(time.time()*1000)' | awk -F. '{print $1}'`
+}
+
 get_time
 t0=$CURR_TIME
 if [[ "`compare -metric AE -compose src $1 $2 $3 2>&1`" == "0" ]]; then
@@ -31,18 +33,17 @@ if [[ "`compare -metric AE -compose src $1 $2 $3 2>&1`" == "0" ]]; then
 	t1=$CURR_TIME
 	t=$(( ($t1-$t0) ))
 	t="$(( $t/1000 )).$(( $t%1000 ))"
-	# echo $res
 	rm -f $3
 	echo -e "0" >> $res 
 	echo "equal"
 	echo -e $t >> $res
-else
+else 
 	get_time
 	t1=$CURR_TIME
 	t=$(( ($t1-$t0) ))
 	t="$(( $t/1000 )).$(( $t%1000 ))"
 	echo -e "1" >> $res 
 	echo "differ"
-	# echo $res
 	echo -e $t >> $res
 fi
+exit 0

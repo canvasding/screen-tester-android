@@ -8,10 +8,11 @@ Tools
 
 This folder contains support scripts for framework.
 
-* run.sh - main script file that pulls screenshots from device, creates a diff between them and attested screenshots and forms junit-report based on diff results.
+* run.sh - main script file that calls other fiels in nessesary order
 * pull_data.sh - simple wrapper for android "adb pull" tool
 * clean_data.sh - simple wrapper for android "adb shell rm -r" tool
 * compare.sh - image comparison script
+* compare_list.sh - creates a diff between them and attested screenshots and forms report based on diff results
 * gen_report.awk - AWK program file for generating junit-report
 
 Prerequisites

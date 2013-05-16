@@ -39,7 +39,6 @@ public class ScreenshotTaker {
 	private final List<Bitmap> screenshotAlbum = new ArrayList<Bitmap>();
     private final File fileList;
 	private final SavePathFormat saveFormat;
-	private final boolean autoSave;
 
 	private String savePath;
 	private Point resolution;
@@ -53,9 +52,8 @@ public class ScreenshotTaker {
 		savePath = null;
 		resolution = null;
 		saveFormat = null;
-        fileList = null;
-		autoSave = false;
-    }
+		fileList = null;
+	}
 
 	/**
 	 * Creates an instance of ScreenshotTaker with format params.
@@ -64,10 +62,9 @@ public class ScreenshotTaker {
 	 */
 	public ScreenshotTaker(SavePathFormat format)
 	{
-        saveFormat = format;
-		autoSave = true;
+		saveFormat = format;
 
-        fileList = new File(DEFAULT_SCREENSHOTS_PATH, SCREENSHOT_LIST_FILENAME);
+		fileList = new File(DEFAULT_SCREENSHOTS_PATH, SCREENSHOT_LIST_FILENAME);
 		File parent = fileList.getParentFile();
 		if ( parent.exists() ) {
 //			cleanupOutput(parent);
@@ -75,7 +72,7 @@ public class ScreenshotTaker {
 		else if ( !parent.mkdirs() ) {
 			Assert.fail("Cannot create " + DEFAULT_SCREENSHOTS_PATH + " folder");
 		}
-    }
+	}
 
 	/**
 	 * Makes a screenshot.
@@ -84,14 +81,15 @@ public class ScreenshotTaker {
 	 * @param excludedViewIds array of ids that we want to exclude from screening. Can bu null.
 	 * @param screenshotName name, that will identify screenshot
 	 */
+	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
 	public void doScreenShot(final Activity activity, Integer screeningViewId, int[] excludedViewIds,
 	                         String screenshotName)
 	{
 
-        if (activity == null) Assert.fail("Activity is null. Maybe not started or already finished");
-        // BUG: next line will not screenshot activity if there is dialog
-		// Should be be another mechanism to check whether activity was drawed
-//        if (!activity.hasWindowFocus()) Assert.fail("Activity is not displayed or doesn't have focus (May be taken be pop-up or dialog)");
+		if (activity == null) Assert.fail("Activity is null. Maybe not started or already finished");
+		// BUG: next line will not screen down activity if there is dialog
+		// Should be another mechanism to check whether activity was draw
+//        if (!activity.hasWindowFocus()) Assert.fail("Activity is not displayed or doesn't have focus (May be taken by pop-up or dialog)");
 
 		Display disp = activity.getWindowManager().getDefaultDisplay();
 		resolution = new Point(disp.getWidth(),disp.getHeight());
@@ -120,9 +118,13 @@ public class ScreenshotTaker {
 			@Override
 			public void run()
 			{
+				View root = activity.findViewById(android.R.id.content);
+				root.setFocusable(true);
+				root.setFocusableInTouchMode(true);
+				root.requestFocus();
 				View view = activity.findViewById(finalScreeningViewId);
 				view.setDrawingCacheEnabled(true);
-                Bitmap screenshot = view.getDrawingCache();
+				Bitmap screenshot = view.getDrawingCache();
 				screenshotAlbum.add(screenshot);
 				synchronized (this) {
 					this.notify();
@@ -137,7 +139,7 @@ public class ScreenshotTaker {
 			}
 			catch ( InterruptedException e ) {
 				e.printStackTrace();
-                Assert.fail("Thread interrupted during screening");
+				Assert.fail("Thread interrupted during screening");
 			}
 		}
 		if ( savePath != null ) {
@@ -154,21 +156,21 @@ public class ScreenshotTaker {
 		return screenshotAlbum;
 	}
 
-	private String getFormedScreenshotName(String className,String screensotName, int number)
+	private String getFormedScreenshotName(String className,String screenshotName, int number)
 	{
 		switch ( saveFormat ) {
 			case PREFIX:
-				return String.format("%s/%dx%d/%s_%s%d", savePath, resolution.x, resolution.y,className,screensotName,number);
+				return String.format("%s/%dx%d/%s_%s%d", savePath, resolution.x, resolution.y,className,screenshotName,number);
 			case SUFFIX:
-				return String.format("%s/%s_%s%d_%dx%d", savePath, className, screensotName, number, resolution.x,resolution.y);
+				return String.format("%s/%s_%s%d_%dx%d", savePath, className, screenshotName, number, resolution.x,resolution.y);
 			default:
 				return null;
 		}
 	}
 
-	private void saveScreenshot(String className,String screensotName)
+	private void saveScreenshot(String className,String screenshotName)
 	{
-		String resultFileName = getFormedScreenshotName(className, screensotName, screenshotAlbum.size()) + FILE_EXT;
+		String resultFileName = getFormedScreenshotName(className, screenshotName, screenshotAlbum.size()) + FILE_EXT;
 		File resultFile = new File(DEFAULT_SCREENSHOTS_PATH + resultFileName);
 		resultFile.getParentFile().mkdirs();
 		try {
@@ -200,27 +202,27 @@ public class ScreenshotTaker {
 		}
 	}
 
-    /**
-     * Recursive deletion of directory or file
-     * @param dir folder or file to delete
-     */
-    private void cleanupOutput(File dir) {
-        if (dir.isDirectory())
-            for (File child : dir.listFiles())
-                cleanupOutput(child);
-        if (!dir.delete()) Assert.fail("Cannot cleanup output directory");
-    }
+	/**
+	 * Recursive deletion of directory or file
+	 * @param dir folder or file to delete
+	 */
+	private void cleanupOutput(File dir) {
+		if (dir.isDirectory())
+			for (File child : dir.listFiles())
+				cleanupOutput(child);
+		if (!dir.delete()) Assert.fail("Cannot cleanup output directory");
+	}
 
 	/**
 	 * Specifies filename format on save
 	 */
 	public enum SavePathFormat{
 		/**
-		 * screenshot path will be looks like "package/dimension/activityname_screenshotname"
+		 * screenshot path will be look like "package/dimension/activityname_screenshotname"
 		 */
 		PREFIX,
 		/**
-		 * screenshot path will be looks like "package/activityname_screenshotname_dimension"
+		 * screenshot path will be look like "package/activityname_screenshotname_dimension"
 		 */
 		SUFFIX
 	}

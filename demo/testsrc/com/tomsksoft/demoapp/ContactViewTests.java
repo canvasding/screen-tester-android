@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.test.ActivityInstrumentationTestCase2;
 import com.tomsksoft.demoapp.activity.ContactViewActivity;
 import com.tomsksoft.demoapp.storage.ContactsContentProvider;
@@ -24,65 +25,68 @@ import com.tomsksoft.demoapp.storage.ContactsDbHelper;
 import com.tomsksoft.demoapp.storage.DbStruct;
 import com.tomsksoft.screentester.DatabaseHelper;
 import com.tomsksoft.screentester.ScreenshotTaker;
+import com.tomsksoft.screentester.ViewObject;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ContactViewTests extends
-        ActivityInstrumentationTestCase2<ContactViewActivity> {
+		ActivityInstrumentationTestCase2<ContactViewActivity> {
 
-    private ContactsDbHelper dbHelper;
+	private ContactsDbHelper dbHelper;
 	private ScreenshotTaker taker;
 
 
 	public ContactViewTests() {
-        super(ContactViewActivity.class);
-    }
+		super(ContactViewActivity.class);
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        dbHelper = new ContactsDbHelper(getInstrumentation().getTargetContext(), DbStruct.CONTACTS_DB_NAME, DbStruct.CONTACTS_DB_VERSION);
-        String datasetName = "dataset.xml";
-        InputStream file = getInstrumentation().getContext().getAssets().open(datasetName);
-	    new DatabaseHelper(dbHelper.getWritableDatabase()).fillDatabase(file);
+	@Override
+	protected void setUp() throws Exception {
+		dbHelper = new ContactsDbHelper(getInstrumentation().getTargetContext(), DbStruct.CONTACTS_DB_NAME, DbStruct.CONTACTS_DB_VERSION);
+		String datasetName = "dataset.xml";
+		InputStream file = getInstrumentation().getContext().getAssets().open(datasetName);
+		new DatabaseHelper(dbHelper.getWritableDatabase()).fillDatabase(file);
 
-	    taker = new ScreenshotTaker(ScreenshotTaker.SavePathFormat.SUFFIX);
-    }
+		taker = new ScreenshotTaker(ScreenshotTaker.SavePathFormat.SUFFIX);
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        dbHelper.close();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		dbHelper.close();
+	}
 
-    public void testContactViewScreenshot() {
+	public void testContactViewScreenshot() {
 
 		/*
 		 * do not use root.managedQuery()! 
 		 * somehow after launch child activity cursor data looses, or it's requerying
 		 */
-        Context targetContext = getInstrumentation().getTargetContext();
-        Cursor cursor = targetContext.getContentResolver().query(
-                ContactsContentProvider.CONTACT_CONTENT_URI, null, null, null,
-                null);
+		Context targetContext = getInstrumentation().getTargetContext();
+		Cursor cursor = targetContext.getContentResolver().query(
+				ContactsContentProvider.CONTACT_CONTENT_URI, null, null, null,
+				null);
 
-        cursor.moveToFirst(); // maybe set if number of records in db equals number got from query
-        while (!cursor.isAfterLast()) {
-            long id = cursor.getLong(cursor
-                    .getColumnIndex(DbStruct.ContactColumns.CONTACT_ID));
+		cursor.moveToFirst(); // maybe set if number of records in db equals number got from query
+		while (!cursor.isAfterLast()) {
+			long id = cursor.getLong(cursor
+					.getColumnIndex(DbStruct.ContactColumns.CONTACT_ID));
 
-            Intent contactViewIntent = new Intent(targetContext,
-                    ContactViewActivity.class);
-            contactViewIntent.putExtra(DbStruct.ContactColumns.CONTACT_ID, id);
+			Intent contactViewIntent = new Intent(targetContext,
+					ContactViewActivity.class);
+			contactViewIntent.putExtra(DbStruct.ContactColumns.CONTACT_ID, id);
 
-            final Activity activity = launchActivityWithIntent(
-                    getInstrumentation().getTargetContext().getPackageName(),
-                    ContactViewActivity.class, contactViewIntent);
+			final Activity activity = launchActivityWithIntent(
+					getInstrumentation().getTargetContext().getPackageName(),
+					ContactViewActivity.class, contactViewIntent);
 
-	        taker.doScreenShot(activity,null,new int[] {R.id.contact_progressbar},"contactData");
+			taker.doScreenShot(activity,null, Arrays.asList(new ViewObject(R.id.contact_progressbar, new Rect(0,0,50,50))),"contactData");
 
-            activity.finish();
-            cursor.moveToNext();
-        }
-        cursor.close();
-    }
+			activity.finish();
+			cursor.moveToNext();
+		}
+		cursor.close();
+	}
 
 }

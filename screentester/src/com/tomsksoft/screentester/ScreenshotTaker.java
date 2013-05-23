@@ -16,6 +16,7 @@ package com.tomsksoft.screentester;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.View;
 import junit.framework.Assert;
@@ -78,37 +79,39 @@ public class ScreenshotTaker {
 	 * Makes a screenshot.
 	 * @param activity which views need to be screened
 	 * @param screeningViewId id of the view we want to screen. If null, screen root of the activity
-	 * @param excludedViewIds array of ids that we want to exclude from screening. Can bu null.
+	 * @param excludedViews array of ViewObject with ids and params that we want to exclude from screening. Can be null.
+	 *
+	 *
+	 *
+	 *
 	 * @param screenshotName name, that will identify screenshot
 	 */
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-	public void doScreenShot(final Activity activity, Integer screeningViewId, int[] excludedViewIds,
-	                         String screenshotName)
+	public void doScreenShot(
+			final Activity activity, Integer screeningViewId, List<ViewObject> excludedViews, String screenshotName)
 	{
-
 		if (activity == null) Assert.fail("Activity is null. Maybe not started or already finished");
-		// BUG: next line will not screen down activity if there is dialog
-		// Should be another mechanism to check whether activity was draw
-//        if (!activity.hasWindowFocus()) Assert.fail("Activity is not displayed or doesn't have focus (May be taken by pop-up or dialog)");
 
 		Display disp = activity.getWindowManager().getDefaultDisplay();
 		resolution = new Point(disp.getWidth(),disp.getHeight());
 		this.savePath = activity.getPackageName();
+		ArrayList<Rect> areas = new ArrayList<Rect>();
 
 		if ( screeningViewId == null ) {
 			screeningViewId = android.R.id.content;
 		}
-		if ( excludedViewIds != null && excludedViewIds.length > 0 ) {
-			for ( final int excludedViewId : excludedViewIds ) {
-				activity.runOnUiThread(new Runnable()
+		if ( excludedViews != null && excludedViews.size() > 0 ) {
+			for ( final ViewObject view : excludedViews ) {
+				if (view.needFullExclude())
+					activity.runOnUiThread(new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						activity.findViewById(excludedViewId).setVisibility(View.INVISIBLE);
+						activity.findViewById(view.getViewId()).setVisibility(View.INVISIBLE);
 					}
-				}
-				);
+				});
+				areas.add(view.computeExcludedArea(activity, screeningViewId));
 			}
 		}
 
@@ -143,7 +146,7 @@ public class ScreenshotTaker {
 			}
 		}
 		if ( savePath != null ) {
-			saveScreenshot(activity.getLocalClassName(),screenshotName);
+			saveScreenshot(activity.getLocalClassName(),screenshotName, areas);
 		}
 	}
 
@@ -168,16 +171,13 @@ public class ScreenshotTaker {
 		}
 	}
 
-	private void saveScreenshot(String className,String screenshotName)
+	private void saveScreenshot(String className,String screenshotName, ArrayList<Rect> areas)
 	{
 		String resultFileName = getFormedScreenshotName(className, screenshotName, screenshotAlbum.size()) + FILE_EXT;
 		File resultFile = new File(DEFAULT_SCREENSHOTS_PATH + resultFileName);
 		resultFile.getParentFile().mkdirs();
+		String record = formRecord(resultFileName,areas);
 		try {
-			FileWriter fileListWriter = new FileWriter(fileList, true);
-			fileListWriter.write(resultFileName + '\n');
-			fileListWriter.close();
-
 			Bitmap lastScreenshot = screenshotAlbum.get(screenshotAlbum.size() - 1);
 			if ( lastScreenshot == null ) {
 				resultFile.delete();
@@ -188,9 +188,12 @@ public class ScreenshotTaker {
 			lastScreenshot.compress(Bitmap.CompressFormat.PNG, 100, pictureOutStream);
 			pictureOutStream.close();
 
-			// need to avoid OutOfMemoryException
+			// need to avoid OutOfMemoryException, o'rly?
 			lastScreenshot.recycle();
 
+			FileWriter fileListWriter = new FileWriter(fileList, true);
+			fileListWriter.write(record + '\n');
+			fileListWriter.close();
 		}
 		catch ( FileNotFoundException e ) {
 			e.printStackTrace();
@@ -200,6 +203,16 @@ public class ScreenshotTaker {
 			e.printStackTrace();
 			Assert.fail("Error closing file");
 		}
+	}
+
+	private String formRecord(String filename, ArrayList<Rect> objects){
+		if ( objects == null ) return filename;
+		String res = filename + ":";
+		for ( Rect rect: objects){
+			if (rect == null) continue;
+			res += String.format("%s,%s,%s,%s;", rect.left, rect.top, rect.right, rect.bottom);
+		}
+		return res.trim();
 	}
 
 	/**

@@ -12,8 +12,10 @@ This folder contains support scripts for framework.
 * pull_data.sh - simple wrapper for android "adb pull" tool
 * clean_data.sh - simple wrapper for android "adb shell rm -r" tool
 * compare.sh - image comparison script
-* compare_list.sh - creates a diff between them and attested screenshots and forms report based on diff results
+* compare_screens.sh - creates a diff between them and attested screenshots and forms report based on diff results
 * gen_report.awk - AWK program file for generating junit-report
+* excluding_areas.sh - creates a image file with black rectangles or their contours
+* utils.sh - script with utils functions
 
 Prerequisites
 -------------

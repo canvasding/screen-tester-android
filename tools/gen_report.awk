@@ -19,8 +19,10 @@ BEGIN{
 #sub("./", "")	{  }
 sub("/", FS)	{ print "<testsuite name=\"" "screentester" "\">" }
 $2 != ""		{ print "<testcase classname=\"" $1 ".screentester" "\"", "name=\"" $2 "\"", "time=\"" $4 "\">" }
+$3 == -4		{ print "<failure message=\"Excluding areas changed\"/>"}
+$3 == -3		{ print "<failure message=\"Missing attested screenshot\"/>"}
 $3 == -2		{ print "<failure message=\"New screenshot\"/>"}
-$3 == -1		{ print "<failure message=\"Not been screened\"/>"}
+$3 == -1		{ print "<failure message=\"Missing current screenshot\"/>"}
 $3 > 0	 		{ print "<failure message=\"Screenshots differ\"/>"}
 $2 != ""		{ print "</testcase>" }
 $0 != ""		{ print "</testsuite>" }

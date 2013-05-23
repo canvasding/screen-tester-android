@@ -23,37 +23,37 @@ import com.tomsksoft.screentester.ScreenshotTaker;
 import java.io.InputStream;
 
 public class ContactListTests extends
-        ActivityInstrumentationTestCase2<ContactsListActivity> {
+		ActivityInstrumentationTestCase2<ContactsListActivity> {
 
-    private ContactsListActivity activity;
-    private ContactsDbHelper dbHelper;
+	private ContactsListActivity activity;
+	private ContactsDbHelper dbHelper;
 	private ScreenshotTaker taker;
 
-    public ContactListTests() {
-        super(ContactsListActivity.class);
-    }
+	public ContactListTests() {
+		super(ContactsListActivity.class);
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        dbHelper = new ContactsDbHelper(getInstrumentation().getTargetContext(), DbStruct.CONTACTS_DB_NAME, DbStruct.CONTACTS_DB_VERSION);
-        String datasetName = "dataset.xml";
-        InputStream file = getInstrumentation().getContext().getAssets().open(datasetName);
-        new DatabaseHelper(dbHelper.getWritableDatabase()).fillDatabase(file);
+	@Override
+	protected void setUp() throws Exception {
+		dbHelper = new ContactsDbHelper(getInstrumentation().getTargetContext(), DbStruct.CONTACTS_DB_NAME, DbStruct.CONTACTS_DB_VERSION);
+		String datasetName = "dataset.xml";
+		InputStream file = getInstrumentation().getContext().getAssets().open(datasetName);
+		new DatabaseHelper(dbHelper.getWritableDatabase()).fillDatabase(file);
 
-	    taker = new ScreenshotTaker(ScreenshotTaker.SavePathFormat.SUFFIX);
-        activity = getActivity();
-    }
+		taker = new ScreenshotTaker(ScreenshotTaker.SavePathFormat.SUFFIX);
+		activity = getActivity();
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        activity.finish();
-        dbHelper.close();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		activity.finish();
+		dbHelper.close();
+	}
 
-    public void testContactsListScreenshot() {
+	public void testContactsListScreenshot() {
 
-	    taker.doScreenShot(activity,null,null,"contactListData");
+		taker.doScreenShot(activity,null,null,"contactListData");
 
-    }
+	}
 
 }

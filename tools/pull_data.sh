@@ -12,7 +12,7 @@
 #!/bin/bash
 set -e
 
-if [ "$#" != "2" ]; then 
+if [[ $# != 2 ]]; then 
 	echo "Usage: pull_data.sh <device_file_dir> <local_file_dir>"; 
 	echo "<device_file_dir> - folder on device which is need to be pulled"
 	echo "<local_file_dir> - folder to which data will be pulled"
